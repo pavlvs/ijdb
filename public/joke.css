@@ -102,7 +102,7 @@ blockquote {
 }
 blockquote p {
   display: table-cell;
-  width: 70%;
+  width: 90%;
   vertical-align: top;
 }
 blockquote form {

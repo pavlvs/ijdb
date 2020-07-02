@@ -4,12 +4,8 @@ try {
     $db = new PDO('mysql:host=localhost;dbname=ijdb;charset=utf8', 'root', '');
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    $sql = 'SELECT joketext FROM jokes';
-    $result = $db->query($sql);
-
-    while ($row = $result->fetch()) {
-        $jokes[] = $row['joketext'];
-    }
+    $sql = 'SELECT id, joketext FROM jokes';
+    $jokes = $db->query($sql);
 
     $title = 'Jokes list';
 
