@@ -91,6 +91,7 @@ form {
   overflow: auto;
   clear: both;
   display: block;
+  margin: 25px;
 }
 
 blockquote {
