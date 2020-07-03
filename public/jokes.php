@@ -4,12 +4,7 @@ try {
     include __DIR__ . '/../includes/DatabaseConnection.php';
     include __DIR__ . '/../includes/DatabaseFunctions.php';
 
-    $sql = 'SELECT jokes.id, joketext, `name`, email
-        FROM jokes
-        INNER JOIN  authors
-        ON authorId = authors.id';
-
-    $jokes = $db->query($sql);
+    $jokes = allJokes($db);
 
     $title = 'Jokes list';
 

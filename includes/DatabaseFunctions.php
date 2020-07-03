@@ -33,3 +33,18 @@ function updateJoke($db, $jokeId, $joketext, $authorId) {
 
     query($db, 'UPDATE jokes SET authorId = :authorId, joketext = :joketext  WHERE id = :id', $parameters);
 }
+
+function deleteJoke($db, $id) {
+    $parameters = [':id' => $id];
+
+    query($db, 'DELETE FROM jokes WHERE id = :id', $parameters);
+}
+
+function allJokes($db) {
+    $jokes = query($db, 'SELECT jokes.id, joketext, `name`, email
+        FROM jokes
+        INNER JOIN authors
+        ON authorId = authors.id');
+
+    return $jokes->fetchAll();
+}
