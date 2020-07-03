@@ -3,14 +3,14 @@ include __DIR__ . '/../includes/DatabaseConnection.php';
 
 function totalJokes($db) {
     $stmt = query($db, 'SELECT COUNT(*) FROM jokes');
-    $row = $stmt->fetch();
+    $row  = $stmt->fetch();
 
     return $row[0];
 }
 
 function getJoke($db, $id) {
     $parameters = [':id' => $id];
-    $stmt = query($db, 'SELECT FROM jokes WHERE id = :id', $parameters);
+    $stmt = query($db, 'SELECT * FROM `jokes` WHERE `id` = :id', $parameters);
     return $stmt->fetch();
 }
 
@@ -26,4 +26,10 @@ function insertJoke($db, $joketext, $authorId) {
     $parameters = [':joketext' => $joketext, ':authorId' => $authorId];
 
     query($db, $sql, $parameters);
+}
+
+function updateJoke($db, $jokeId, $joketext, $authorId) {
+    $parameters = [':joketext' => $joketext, ':authorId' => $authorId, ':id' => $jokeId];
+
+    query($db, 'UPDATE jokes SET authorId = :authorId, joketext = :joketext  WHERE id = :id', $parameters);
 }
