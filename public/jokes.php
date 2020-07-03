@@ -4,7 +4,11 @@ try {
     $db = new PDO('mysql:host=localhost;dbname=ijdb;charset=utf8', 'root', '');
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    $sql = 'SELECT id, joketext FROM jokes';
+    $sql = 'SELECT jokes.id, joketext, `name`, email
+        FROM jokes
+        INNER JOIN  authors
+        ON authorId = authors.id';
+
     $jokes = $db->query($sql);
 
     $title = 'Jokes list';
