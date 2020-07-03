@@ -1,7 +1,6 @@
 <?php
 try {
-    $db = new PDO('mysql:host=localhost;dbname=ijdb;charset=utf8', 'root', '');
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    include __DIR__ . '/../includes/DatabaseConnection.php';
 
     $sql = 'DELETE FROM jokes WHERE id = :id';
 
