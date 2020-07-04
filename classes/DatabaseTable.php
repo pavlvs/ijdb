@@ -53,7 +53,7 @@ class DatabaseTable
     }
 
     private function update($fields)
-
+    {
         $sql = ' UPDATE `' . $this->$table . '` SET ';
         foreach ($fields as $key => $value) {
             $sql .= '`' . $key . '` = :' . $key . ',';

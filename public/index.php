@@ -1,11 +1,41 @@
 <?php
 
-$title = 'Internet Joke Database';
+function loadTemplate($templateFileName, $variables = []) {
+    extract($variables);
 
-ob_start();
+    ob_start();
 
-include __DIR__ . '/../templates/home.html.php';
+    include __DIR__ . '/../templates/' . $templateFileName;
 
-$output = ob_get_clean();
+    return ob_get_clean();
+}
+
+try {
+    include __DIR__ . '/../includes/DatabaseConnection.php';
+    include __DIR__ . '/../classes/DatabaseTable.php';
+    include __DIR__ . '/../controllers/JokeController.php';
+
+    $jokesTable = new DatabaseTable($db, 'jokes', 'id');
+    $authorsTable = new DatabaseTable($db, 'authors', 'id');
+
+    $jokeController = new JokeController($jokesTable, $authorsTable);
+
+    $action = $_GET['action'] ?? 'home';
+
+    $page = $jokeController->$action();
+
+    $title = $page['title'];
+
+    if (isset($page['variables'])) {
+            $output = loadTemplate($page['template'], $page['variables']);
+    } else {
+        $output = loadTemplate($page['template']);
+    }
+
+} catch (PDOException $e) {
+    $title = 'An error has occurred';
+
+    $output = 'Database error: ' . $e->getMessage() . 'in ' .$e->getFile() . ':' . $e->getLine();
+}
 
 include __DIR__ . '/../templates/layout.html.php';
