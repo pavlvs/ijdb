@@ -2,14 +2,17 @@
 
 try {
     include __DIR__ . '/../includes/DatabaseConnection.php';
-    include __DIR__ . '/../includes/DatabaseFunctions.php';
+    include __DIR__ . '/../classes/DatabaseTable.php';
 
-    $result = findAll($db, 'jokes');
+    $jokesTable = new DatabaseTable($db, 'jokes', 'id');
+    $authorsTable = new DatabaseTable($db, 'authors', 'id');
+
+    $result = $jokesTable->findAll();
 
     $jokes = [];
 
     foreach ($result as $joke) {
-        $author = findById($db, 'authors', 'id', $joke['authorId']);
+        $author = $authorsTable->findById($joke['authorId']);
 
         $jokes[] = [
             'id' => $joke['id'],
@@ -21,7 +24,7 @@ try {
     }
     $title = 'Jokes list';
 
-    $totalJokes = total($db, 'jokes');
+    $totalJokes = $jokesTable->total();
 
     // Start the buffer
 

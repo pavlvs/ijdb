@@ -1,7 +1,9 @@
 <?php
 
 include __DIR__ . '/../includes/DatabaseConnection.php';
-include __DIR__ . '/../includes/DatabaseFunctions.php';
+include __DIR__ . '/../classes/DatabaseTable.php';
+
+    $jokesTable = new DatabaseTable($db, 'jokes', 'id');
 
 try {
     if (isset($_POST['joke'])) {
@@ -10,12 +12,12 @@ try {
         $joke['jokedate'] = new DateTime();
         $joke['authorId'] =1;
 
-        save($db, 'jokes', 'id', $joke);
+        $jokesTable->save($joke);
 
         header("Location: jokes.php");
     } else {
         if(isset($_GET['id'])){
-            $joke = findById($db, 'jokes', 'id', $_GET['id']);
+            $joke = $joke->findById($_GET['id']);
         }
 
         $title = 'Edit joketext';
