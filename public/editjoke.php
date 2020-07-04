@@ -5,7 +5,11 @@ include __DIR__ . '/../includes/DatabaseFunctions.php';
 
 try {
     if (isset($_POST['joketext'])) {
-        updateJoke($db, $_POST['jokeid'], $_POST['joketext'], 1);
+        updateJoke($db,[
+            'id' =>  $_POST['jokeid'],
+            'joketext' => $_POST['joketext'],
+            'authorId' => 1
+        ]);
 
         header("Location: jokes.php");
     } else {
