@@ -162,7 +162,7 @@ function update($pdo, $table, $primaryKey, $fields) {
     $sql = ' UPDATE `' . $table . '` SET ';
 
     foreach ($fields as $key => $value) {
-        $sql.= '`' . $key . '` = :' . $key . ',';
+        $sql .= '`' . $key . '` = :' . $key . ',';
     }
 
     $sql = rtrim($sql, ',');
@@ -180,9 +180,9 @@ function update($pdo, $table, $primaryKey, $fields) {
 function findById($db, $table, $primaryKey, $value) {
     $sql = 'SELECT * FROM `' . $table . '` WHERE `' . $primaryKey . '` = :value';
 
-    $parameters = [':value' => $value];
+    $parameters = ['value' => $value];
 
-    $stmt = query($db, $sql, $primaryKey);
+    $stmt = query($db, $sql, $parameters);
 
     return $stmt->fetch();
 }
@@ -191,4 +191,15 @@ function total($db, $table) {
     $stmt = query($db, 'SELECT COUNT(*) FROM `' . $table . '`');
     $row = $stmt->fetch();
     return $row[0];
+}
+
+function save($db, $table, $primaryKey, $record) {
+    try {
+        if ($record[$primaryKey] == '') {
+            $record[$primaryKey] = null;
+        }
+        insert($db, $table, $record);
+    } catch (PDOException $e) {
+        update($db, $table, $primaryKey, $record);
+    }
 }

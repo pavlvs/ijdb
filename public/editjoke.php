@@ -4,16 +4,19 @@ include __DIR__ . '/../includes/DatabaseConnection.php';
 include __DIR__ . '/../includes/DatabaseFunctions.php';
 
 try {
-    if (isset($_POST['joketext'])) {
-        updateJoke($db,[
-            'id' =>  $_POST['jokeid'],
-            'joketext' => $_POST['joketext'],
-            'authorId' => 1
-        ]);
+    if (isset($_POST['joke'])) {
+
+        $joke = $_POST['joke'];
+        $joke['jokedate'] = new DateTime();
+        $joke['authorId'] =1;
+
+        save($db, 'jokes', 'id', $joke);
 
         header("Location: jokes.php");
     } else {
-        $joke = getJoke($db, $_GET['id']);
+        if(isset($_GET['id'])){
+            $joke = findById($db, 'jokes', 'id', $_GET['id']);
+        }
 
         $title = 'Edit joketext';
 

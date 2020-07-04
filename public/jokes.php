@@ -4,11 +4,24 @@ try {
     include __DIR__ . '/../includes/DatabaseConnection.php';
     include __DIR__ . '/../includes/DatabaseFunctions.php';
 
-    $jokes = allJokes($db);
+    $result = findAll($db, 'jokes');
 
+    $jokes = [];
+
+    foreach ($result as $joke) {
+        $author = findById($db, 'authors', 'id', $joke['authorId']);
+
+        $jokes[] = [
+            'id' => $joke['id'],
+            'joketext' => $joke['joketext'],
+            'jokedate' => $joke['jokedate'],
+            'name' => $author['name'],
+            'email' => $author['email']
+        ];
+    }
     $title = 'Jokes list';
 
-    $totalJokes = totalJokes($db);
+    $totalJokes = total($db, 'jokes');
 
     // Start the buffer
 
