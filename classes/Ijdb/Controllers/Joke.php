@@ -1,17 +1,20 @@
 <?php
 namespace Ijdb\Controllers;
+
 use \Ninja\DatabaseTable;
 
-class Joke {
+class Joke
+{
     private $authorsTable;
     private $jokesTable;
 
-    public function __construct(DatabaseTable $jokesTable, DatabaseTable $authorsTable) {
-        $this->jokesTable = $jokesTable;
+    public function __construct(DatabaseTable $jokesTable, DatabaseTable $authorsTable)
+    {
+        $this->jokesTable   = $jokesTable;
         $this->authorsTable = $authorsTable;
     }
 
-    public function list() {
+    function list() {
         $result = $this->jokesTable->findAll();
 
         $jokes = [];
@@ -20,11 +23,11 @@ class Joke {
             $author = $this->authorsTable->findById($joke['authorId']);
 
             $jokes[] = [
-                'id' => $joke['id'],
+                'id'       => $joke['id'],
                 'joketext' => $joke['joketext'],
                 'jokedate' => $joke['jokedate'],
-                'name' => $author['name'],
-                'email' => $author['email']
+                'name'     => $author['name'],
+                'email'    => $author['email'],
             ];
         }
         $title = 'Jokes list';
@@ -34,15 +37,15 @@ class Joke {
         // Start the buffer
 
         return ['template' => 'jokes.html.php',
-            'title' => $title,
-            'variables' => [
+            'title'            => $title,
+            'variables'        => [
                 'totalJokes' => $totalJokes,
-                'jokes' => $jokes
-            ]
+                'jokes'      => $jokes,
+            ],
         ];
     }
 
-    public function home ()
+    public function home()
     {
         $title = 'Internet Joke DatabaseTable';
 
@@ -51,34 +54,36 @@ class Joke {
 
     public function delete()
     {
-       $this->jokesTable->delete($_POST['id']);
+        $this->jokesTable->delete($_POST['id']);
 
-       header("Location: /joke/list");
+        header("Location: /joke/list");
     }
 
-    public function edit ()
+    public function saveEdit()
     {
-        if(isset($_POST['joke'])){
-            $joke = $_POST['joke'];
-            $joke['date'] = new \DateTime();
-            $joke['authorId'] = 1;
+        $joke             = $_POST['joke'];
+        $joke['date']     = new \DateTime();
+        $joke['authorId'] = 1;
 
-            $this->jokesTable->save($joke);
+        $this->jokesTable->save($joke);
 
-            header("Location: /joke/list");
-        } else{
-            if(isset($_GET['id'])){
-                $joke = $this->jokesTable->findById($_GET['id']);
-            }
-
-            $title = 'Edit joke';
-
-            return ['template' => 'editjoke.html.php',
-                'title' => $title,
-                'variables' => [
-                    'joke' => $joke ?? null
-                ]
-            ];
-        }
+        header("Location: /joke/list");
     }
+
+    public function edit()
+    {
+        if (isset($_GET['id'])) {
+            $joke = $this->jokesTable->findById($_GET['id']);
+        }
+
+        $title = 'Edit joke';
+
+        return ['template' => 'editjoke.html.php',
+            'title'            => $title,
+            'variables'        => [
+                'joke' => $joke ?? null,
+            ],
+        ];
+    }
+
 }
