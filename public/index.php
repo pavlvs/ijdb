@@ -1,7 +1,6 @@
 <?php
 try {
-    include __DIR__ . '/../classes/EntryPoint.php';
-    include __DIR__ . '/../classes/IjdbRoutes.php';
+    include __DIR__ . '/../includes/autoload.php';
 
     //if no route variable is set, use 'joke/home'
     $route = ltrim(strtok($_SERVER['REQUEST_URI'], '?'), '/');
