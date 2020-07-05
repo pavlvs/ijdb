@@ -1,5 +1,8 @@
 <?php
-class RegisterController
+namespace Ijdb\Controllers;
+use \Ninja\DatabaseTable;
+
+class Register
 {
    private $authorsTable;
 
