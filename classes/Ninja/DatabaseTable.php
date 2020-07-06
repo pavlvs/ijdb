@@ -7,11 +7,11 @@ class DatabaseTable
     private $table;
     private $primaryKey;
 
-    public function __construct( \PDO $db,  string $table,  string $primaryKey)
+    public function __construct(\PDO $db, string $table, string $primaryKey)
     {
-        $this->db = $db;
-        $this->table= $table;
-        $this->primaryKey= $primaryKey;
+        $this->db         = $db;
+        $this->table      = $table;
+        $this->primaryKey = $primaryKey;
     }
 
     private function query($sql, $parameters = [])
@@ -30,11 +30,21 @@ class DatabaseTable
 
     public function findById($value)
     {
-        $sql = 'SELECT * FROM `' . $this->table . '` WHERE `' . $this->primaryKey . '` = :value';
+        $sql        = 'SELECT * FROM `' . $this->table . '` WHERE `' . $this->primaryKey . '` = :value';
         $parameters = ['value' => $value];
-        $stmt = $this->query($sql, $parameters);
+        $stmt       = $this->query($sql, $parameters);
 
         return $stmt->fetch();
+    }
+
+    public function find($column, $value)
+    {
+        $sql = 'SELECT * FROM ' . $this->table . ' WHERE ' . $column . ' =  :value';
+
+        $parameters = ['value' => $value];
+        $stmt       = $this->query($sql, $parameters);
+
+        return $stmt->fetchAll();
     }
 
     private function insert($fields)
@@ -64,7 +74,7 @@ class DatabaseTable
         $sql .= ' WHERE `' . $this->primaryKey . '` = :primaryKey';
         // Set the :primaryKey variable
         $fields['primaryKey'] = $fields['id'];
-        $fields = $this->processDates($fields);
+        $fields               = $this->processDates($fields);
         $this->query($sql, $fields);
     }
 
