@@ -3,15 +3,24 @@ namespace Ijdb;
 
 class IjdbRoutes implements \Ninja\Routes
 {
-    public function getRoutes()
+    private $authorsTable;
+    private $jokesTable;
+    private $authentication;
+
+    public function __construct()
     {
         include __DIR__ . '/../../includes/DatabaseConnection.php';
 
-        $jokesTable   = new \Ninja\DatabaseTable($db, 'jokes', 'id');
-        $authorsTable = new \Ninja\DatabaseTable($db, 'authors', 'id');
+        $this->jokesTable     = new \Ninja\DatabaseTable($db, 'jokes', 'id');
+        $this->authorsTable   = new \Ninja\DatabaseTable($db, 'authors', 'id');
+        $this->authentication = new \Ninja\Authentication($this->authorsTable, 'email', 'password');
+    }
 
-        $jokeController   = new \Ijdb\Controllers\Joke($jokesTable, $authorsTable);
-        $authorController = new \Ijdb\Controllers\Register($authorsTable);
+    public function getRoutes(): array
+    {
+        $jokeController   = new \Ijdb\Controllers\Joke($this->jokesTable, $this->authorsTable);
+        $authorController = new \Ijdb\Controllers\Register($this->authorsTable);
+        $loginController  = new \Ijdb\Controllers\Login($this->authentication);
 
         $routes = [
             'author/register' => [
@@ -31,20 +40,22 @@ class IjdbRoutes implements \Ninja\Routes
                 ],
             ],
             'joke/edit'       => [
-                'POST' => [
+                'POST'  => [
                     'controller' => $jokeController,
                     'action'     => 'saveEdit',
                 ],
-                'GET'  => [
+                'GET'   => [
                     'controller' => $jokeController,
                     'action'     => 'edit',
                 ],
+                'login' => true,
             ],
             'joke/delete'     => [
-                'POST' => [
+                'POST'  => [
                     'controller' => $jokeController,
                     'action'     => 'delete',
                 ],
+                'login' => true,
             ],
             'joke/list'       => [
                 'GET' => [
@@ -58,9 +69,37 @@ class IjdbRoutes implements \Ninja\Routes
                     'action'     => 'home',
                 ],
             ],
+            'login/error'     => [
+                'GET' => [
+                    'controller' => $loginController,
+                    'action'     => 'error',
+                ],
+            ],
+            'login'           => [
+                'GET'  => [
+                    'controller' => $loginController,
+                    'action'     => 'loginForm',
+                ],
+                'POST' => [
+                    'controller' => $loginController,
+                    'action'     => 'processLogin',
+                ],
+            ],
+            'login/success'   => [
+                'GET'   => [
+                    'controller' => $loginController,
+                    'action'     => 'success',
+                ],
+                'login' => true,
+            ],
         ];
 
         return $routes;
 
+    }
+
+    public function getAuthentication(): \Ninja\Authentication
+    {
+        return $this->authentication;
     }
 }
