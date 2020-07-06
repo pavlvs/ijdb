@@ -10,10 +10,27 @@ class IjdbRoutes implements \Ninja\Routes
         $jokesTable   = new \Ninja\DatabaseTable($db, 'jokes', 'id');
         $authorsTable = new \Ninja\DatabaseTable($db, 'authors', 'id');
 
-        $jokeController = new \Ijdb\Controllers\Joke($jokesTable, $authorsTable);
+        $jokeController   = new \Ijdb\Controllers\Joke($jokesTable, $authorsTable);
+        $authorController = new \Ijdb\Controllers\Register($authorsTable);
 
         $routes = [
-            'joke/edit'   => [
+            'author/register' => [
+                'GET'  => [
+                    'controller' => $authorController,
+                    'action'     => 'registrationForm',
+                ],
+                'POST' => [
+                    'controller' => $authorController,
+                    'action'     => 'registerUser',
+                ],
+            ],
+            'author/success'  => [
+                'GET' => [
+                    'controller' => $authorController,
+                    'action'     => 'success',
+                ],
+            ],
+            'joke/edit'       => [
                 'POST' => [
                     'controller' => $jokeController,
                     'action'     => 'saveEdit',
@@ -23,19 +40,19 @@ class IjdbRoutes implements \Ninja\Routes
                     'action'     => 'edit',
                 ],
             ],
-            'joke/delete' => [
+            'joke/delete'     => [
                 'POST' => [
                     'controller' => $jokeController,
                     'action'     => 'delete',
                 ],
             ],
-            'joke/list'   => [
+            'joke/list'       => [
                 'GET' => [
                     'controller' => $jokeController,
                     'action'     => 'list',
                 ],
             ],
-            ''            => [
+            ''                => [
                 'GET' => [
                     'controller' => $jokeController,
                     'action'     => 'home',
