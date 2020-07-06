@@ -36,4 +36,11 @@ class Login
     {
         return ['template' => 'loginsuccess.html.php', 'title' => 'Login Successful'];
     }
+
+    public function logout()
+    {
+        session_destroy();
+        unset($_SESSION['username']);
+        return ['template' => 'logout.html.php', 'title' => 'You have been logged out.'];
+    }
 }

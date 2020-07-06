@@ -92,6 +92,12 @@ class IjdbRoutes implements \Ninja\Routes
                 ],
                 'login' => true,
             ],
+            'logout'          => [
+                'GET' => [
+                    'controller' => $loginController,
+                    'action'     => 'logout',
+                ],
+            ],
         ];
 
         return $routes;
