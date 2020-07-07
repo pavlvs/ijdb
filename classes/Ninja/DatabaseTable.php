@@ -6,12 +6,16 @@ class DatabaseTable
     private $db;
     private $table;
     private $primaryKey;
+    private $className;
+    private $constructorArgs;
 
-    public function __construct(\PDO $db, string $table, string $primaryKey)
+    public function __construct(\PDO $db, string $table, string $primaryKey, string $className = '\stdClass', array $constructorArgs = [])
     {
-        $this->db         = $db;
-        $this->table      = $table;
-        $this->primaryKey = $primaryKey;
+        $this->db              = $db;
+        $this->table           = $table;
+        $this->primaryKey      = $primaryKey;
+        $this->className       = $className;
+        $this->constructorArgs = $constructorArgs;
     }
 
     private function query($sql, $parameters = [])
@@ -34,7 +38,7 @@ class DatabaseTable
         $parameters = ['value' => $value];
         $stmt       = $this->query($sql, $parameters);
 
-        return $stmt->fetch();
+        return $stmt->fetchObject($this->className, $this->constructorArgs);
     }
 
     public function find($column, $value)
@@ -44,7 +48,7 @@ class DatabaseTable
         $parameters = ['value' => $value];
         $stmt       = $this->query($sql, $parameters);
 
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(\PDO::FETCH_CLASS, $this->className, $this->constructorArgs);
     }
 
     private function insert($fields)
@@ -88,7 +92,7 @@ class DatabaseTable
     {
         $result = $this->query('SELECT * FROM `' . $this->table . '`');
 
-        return $result->fetchAll();
+        return $result->fetchAll(\PDO::FETCH_CLASS, $this->className, $this->constructorArgs);
     }
 
     private function processDates($fields)

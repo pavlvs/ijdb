@@ -11,8 +11,8 @@ class IjdbRoutes implements \Ninja\Routes
     {
         include __DIR__ . '/../../includes/DatabaseConnection.php';
 
-        $this->jokesTable     = new \Ninja\DatabaseTable($db, 'jokes', 'id');
-        $this->authorsTable   = new \Ninja\DatabaseTable($db, 'authors', 'id');
+        $this->jokesTable     = new \Ninja\DatabaseTable($db, 'jokes', 'id', '\Ijdb\Entity\Joke', [ & $this->authorsTable]);
+        $this->authorsTable   = new \Ninja\DatabaseTable($db, 'authors', 'id', '\Ijdb\Entity\Author', [ & $this->jokesTable]);
         $this->authentication = new \Ninja\Authentication($this->authorsTable, 'email', 'password');
     }
 
