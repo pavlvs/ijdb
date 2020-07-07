@@ -18,7 +18,8 @@ class IjdbRoutes implements \Ninja\Routes
 
     public function getRoutes(): array
     {
-        $jokeController   = new \Ijdb\Controllers\Joke($this->jokesTable, $this->authorsTable);
+        echo 'foo got to getRoutes';
+        $jokeController   = new \Ijdb\Controllers\Joke($this->jokesTable, $this->authorsTable, $this->authentication);
         $authorController = new \Ijdb\Controllers\Register($this->authorsTable);
         $loginController  = new \Ijdb\Controllers\Login($this->authentication);
 

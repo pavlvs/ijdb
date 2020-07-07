@@ -34,6 +34,8 @@ class DatabaseTable
         $parameters = ['value' => $value];
         $stmt       = $this->query($sql, $parameters);
 
+        echo 'foo claims the value of pk is: ' . $this->primaryKey;
+        var_dump($stmt->fetch());
         return $stmt->fetch();
     }
 

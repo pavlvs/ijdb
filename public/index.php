@@ -3,8 +3,7 @@ try {
     include __DIR__ . '/../includes/autoload.php';
 
     //if no route variable is set, use 'joke/home'
-    $route = ltrim(strtok($_SERVER['REQUEST_URI'], '?'), '/');
-
+    $route      = ltrim(strtok($_SERVER['REQUEST_URI'], '?'), '/');
     $entryPoint = new \Ninja\EntryPoint($route, $_SERVER['REQUEST_METHOD'], new \Ijdb\IjdbRoutes());
     $entryPoint->run();
 } catch (PDOException $e) {
