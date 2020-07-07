@@ -13,7 +13,6 @@ class EntryPoint
         $this->routes = $routes;
         $this->method = $method;
         $this->checkUrl();
-        echo 'foo now says the method is: ' . $this->method;
     }
 
     private function checkUrl()
@@ -43,9 +42,8 @@ class EntryPoint
             !$authentication->isLoggedIn()) {
             header('location: /login/error');
         } else {
-            $this->route = 'joke/edit';
-            $controller  = $routes[$this->route][$this->method]['controller'];
-            $action      = $routes[$this->route][$this->method]['action'];
+            $controller = $routes[$this->route][$this->method]['controller'];
+            $action     = $routes[$this->route][$this->method]['action'];
 
             $page = $controller->$action();
 

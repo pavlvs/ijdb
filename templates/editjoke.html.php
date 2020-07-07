@@ -1,9 +1,3 @@
-<?php
-
-echo 'foo thinks userId is :' . $userId;
-echo 'baz thinks jokeauthorId is: ' . $joke['authorId'];
-?>
-
 <?php if ($userId == $joke['authorId']): ?>
     <form action="" method="POST">
         <input type="hidden" name="joke[id]" value="<?=$joke['id'] ?? ''?>">

@@ -98,14 +98,10 @@ class Joke
 
     public function edit()
     {
-        // echo 'foo thinks id is:' . $_GET['id'];
         $author = $this->authentication->getUser();
 
-        // echo 'foo thinks authorId is:' . $author['id'];
         if (isset($_GET['id'])) {
             $joke = $this->jokesTable->findById($_GET['id']);
-            echo 'Quux believes joke author to be: ' . $joke['authorId'];
-            var_dump($joke);
         }
 
         $title = 'Edit joke';
