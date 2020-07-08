@@ -8,14 +8,17 @@ class Joke
 {
     private $authorsTable;
     private $jokesTable;
+    private $categoriesTable;
     private $authentication;
 
     public function __construct(DatabaseTable $jokesTable,
         DatabaseTable $authorsTable,
+        DatabaseTable $categoriesTable,
         Authentication $authentication) {
-        $this->jokesTable     = $jokesTable;
-        $this->authorsTable   = $authorsTable;
-        $this->authentication = $authentication;
+        $this->jokesTable      = $jokesTable;
+        $this->authorsTable    = $authorsTable;
+        $this->categoriesTable = $categoriesTable;
+        $this->authentication  = $authentication;
     }
 
     function list() {
@@ -48,7 +51,7 @@ class Joke
     {
         $author = $this->authentication->getUser();
 
-        $joke = $this->jokesTable->findById($_GET['id']);
+        $joke = $this->jokesTable->findById($_POST['id']);
 
         if ($joke->authorId != $author->id) {
             return;
@@ -63,25 +66,22 @@ class Joke
     {
         $author = $this->authentication->getUser();
 
-        if (isset($_GET['id'])) {
-            $joke = $this->jokesTable->findById($_GET['id']);
-
-            if ($joke->authorId != $author->id) {
-                return;
-            }
-        }
-
         $joke             = $_POST['joke'];
         $joke['jokedate'] = new \DateTime();
 
-        $author->addJoke($joke);
+        $jokeEntity = $author->addJoke($joke);
+
+        foreach ($_POST['category'] as $categoryId) {
+            $jokeEntity->addCategory($categoryId);
+        }
 
         header("Location: /joke/list");
     }
 
     public function edit()
     {
-        $author = $this->authentication->getUser();
+        $author     = $this->authentication->getUser();
+        $categories = $this->categoriesTable->findAll();
 
         if (isset($_GET['id'])) {
             $joke = $this->jokesTable->findById($_GET['id']);
@@ -92,8 +92,9 @@ class Joke
         return ['template' => 'editjoke.html.php',
             'title'            => $title,
             'variables'        => [
-                'joke'   => $joke ?? null,
-                'userId' => $author->id ?? null,
+                'joke'       => $joke ?? null,
+                'userId'     => $author->id ?? null,
+                'categories' => $categories,
             ],
         ];
     }
