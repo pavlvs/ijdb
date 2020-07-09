@@ -15,7 +15,7 @@ class IjdbRoutes implements \Ninja\Routes
 
         $this->jokesTable           = new \Ninja\DatabaseTable($db, 'jokes', 'id', '\Ijdb\Entity\Joke', [ & $this->authorsTable, &$this->jokesCategoriesTable]);
         $this->authorsTable         = new \Ninja\DatabaseTable($db, 'authors', 'id', '\Ijdb\Entity\Author', [ & $this->jokesTable]);
-        $this->categoriesTable      = new \Ninja\DatabaseTable($db, 'categories', 'id');
+        $this->categoriesTable      = new \Ninja\DatabaseTable($db, 'categories', 'id', '\Ijdb\Entity\Category', [ & $this->jokesTable, &$this->jokesCategoriesTable]);
         $this->jokesCategoriesTable = new \Ninja\DatabaseTable($db, 'jokescategories', 'categoryId');
         $this->authentication       = new \Ninja\Authentication($this->authorsTable, 'email', 'password');
     }
