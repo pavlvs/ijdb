@@ -77,6 +77,8 @@ class Joke
 
         $jokeEntity = $author->addJoke($joke);
 
+        $jokeEntity->clearCategories();
+
         foreach ($_POST['category'] as $categoryId) {
             $jokeEntity->addCategory($categoryId);
         }

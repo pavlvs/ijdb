@@ -32,4 +32,20 @@ class Joke
 
         $this->jokesCategoriesTable->save($jokeCat);
     }
+
+    public function hasCategory($categoryId)
+    {
+        $jokeCategories = $this->jokesCategoriesTable->find('jokeId', $this->id);
+
+        foreach ($jokeCategories as $jokeCategory) {
+            if ($jokeCategory->categoryId == $categoryId) {
+                return true;
+            }
+        }
+    }
+
+    public function clearCategories()
+    {
+        $this->jokesCategoriesTable->deleteWhere('jokeId', $this->id);
+    }
 }
