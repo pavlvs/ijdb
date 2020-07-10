@@ -5,10 +5,10 @@ class Author
 {
     const EDIT_JOKES        = 1;
     const DELETE_JOKES      = 2;
-    const LIST_CATEGORIES   = 3;
-    const EDIT_CATEGORIES   = 4;
-    const REMOVE_CATEGORIES = 5;
-    const EDIT_USER_ACCESS  = 6;
+    const LIST_CATEGORIES   = 4;
+    const EDIT_CATEGORIES   = 8;
+    const REMOVE_CATEGORIES = 16;
+    const EDIT_USER_ACCESS  = 32;
 
     public $id;
     public $name;
@@ -34,6 +34,6 @@ class Author
 
     public function hasPermission($permission)
     {
-
+        return $this->permissions & $permission;
     }
 }

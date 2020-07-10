@@ -57,6 +57,7 @@ class IjdbRoutes implements \Ninja\Routes
                     'action'     => 'savePermissions',
                 ],
                 'login' => true,
+                'permissions' => \Ijdb\Entity\Author::EDIT_USER_ACCESS,
             ],
             'author/list'        => [
                 'GET'   => [
@@ -64,6 +65,7 @@ class IjdbRoutes implements \Ninja\Routes
                     'action'     => 'list',
                 ],
                 'login' => true,
+                'permissions' => \Ijdb\Entity\Author::EDIT_USER_ACCESS,
             ],
             'joke/edit'          => [
                 'POST'  => [

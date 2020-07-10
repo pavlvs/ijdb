@@ -40,7 +40,7 @@ class Joke
             'variables'        => [
                 'totalJokes' => $totalJokes,
                 'jokes'      => $jokes,
-                'userId'     => $author->id ?? null,
+                'user'       => $author, // 'userId'     => $author->id ?? null,
                 'categories' => $this->categoriesTable->findAll(),
             ],
         ];
@@ -59,7 +59,7 @@ class Joke
 
         $joke = $this->jokesTable->findById($_POST['id']);
 
-        if ($joke->authorId != $author->id) {
+        if ($joke->authorId != $author->id && !$author->hasPermission(\Ijdb\Entity\Author::DELETE_JOKES)) {
             return;
         }
 
@@ -101,7 +101,7 @@ class Joke
             'title'            => $title,
             'variables'        => [
                 'joke'       => $joke ?? null,
-                'userId'     => $author->id ?? null,
+                'user' => $author, //'userId'     => $author->id ?? null,
                 'categories' => $categories,
             ],
         ];
