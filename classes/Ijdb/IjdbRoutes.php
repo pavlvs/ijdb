@@ -31,7 +31,7 @@ class IjdbRoutes implements \Ninja\Routes
         $categoryController = new \Ijdb\Controllers\Category($this->categoriesTable);
 
         $routes = [
-            'author/register' => [
+            'author/register'    => [
                 'GET'  => [
                     'controller' => $authorController,
                     'action'     => 'registrationForm',
@@ -41,13 +41,31 @@ class IjdbRoutes implements \Ninja\Routes
                     'action'     => 'registerUser',
                 ],
             ],
-            'author/success'  => [
+            'author/success'     => [
                 'GET' => [
                     'controller' => $authorController,
                     'action'     => 'success',
                 ],
             ],
-            'joke/edit'       => [
+            'author/permissions' => [
+                'GET'   => [
+                    'controller' => $authorController,
+                    'action'     => 'permissions',
+                ],
+                'POST'  => [
+                    'controller' => $authorController,
+                    'action'     => 'savePermissions',
+                ],
+                'login' => true,
+            ],
+            'author/list'        => [
+                'GET'   => [
+                    'controller' => $authorController,
+                    'action'     => 'list',
+                ],
+                'login' => true,
+            ],
+            'joke/edit'          => [
                 'POST'  => [
                     'controller' => $jokeController,
                     'action'     => 'saveEdit',
@@ -58,32 +76,32 @@ class IjdbRoutes implements \Ninja\Routes
                 ],
                 'login' => true,
             ],
-            'joke/delete'     => [
+            'joke/delete'        => [
                 'POST'  => [
                     'controller' => $jokeController,
                     'action'     => 'delete',
                 ],
                 'login' => true,
             ],
-            'joke/list'       => [
+            'joke/list'          => [
                 'GET' => [
                     'controller' => $jokeController,
                     'action'     => 'list',
                 ],
             ],
-            ''                => [
+            ''                   => [
                 'GET' => [
                     'controller' => $jokeController,
                     'action'     => 'home',
                 ],
             ],
-            'login/error'     => [
+            'login/error'        => [
                 'GET' => [
                     'controller' => $loginController,
                     'action'     => 'error',
                 ],
             ],
-            'login'           => [
+            'login'              => [
                 'GET'  => [
                     'controller' => $loginController,
                     'action'     => 'loginForm',
@@ -93,43 +111,46 @@ class IjdbRoutes implements \Ninja\Routes
                     'action'     => 'processLogin',
                 ],
             ],
-            'login/success'   => [
+            'login/success'      => [
                 'GET'   => [
                     'controller' => $loginController,
                     'action'     => 'success',
                 ],
                 'login' => true,
             ],
-            'logout'          => [
+            'logout'             => [
                 'GET' => [
                     'controller' => $loginController,
                     'action'     => 'logout',
                 ],
             ],
-            'category/edit'   => [
-                'POST'  => [
+            'category/edit'      => [
+                'POST'        => [
                     'controller' => $categoryController,
                     'action'     => 'saveEdit',
                 ],
-                'GET'   => [
+                'GET'         => [
                     'controller' => $categoryController,
                     'action'     => 'edit',
                 ],
-                'login' => true,
+                'login'       => true,
+                'permissions' => \Ijdb\Entity\Author::EDIT_CATEGORIES,
             ],
-            'category/list'   => [
-                'GET'   => [
+            'category/list'      => [
+                'GET'         => [
                     'controller' => $categoryController,
                     'action'     => 'list',
                 ],
-                'login' => true,
+                'login'       => true,
+                'permissions' => \Ijdb\Entity\Author::LIST_CATEGORIES,
             ],
-            'category/delete' => [
-                'POST'  => [
+            'category/delete'    => [
+                'POST'        => [
                     'controller' => $categoryController,
                     'action'     => 'delete',
                 ],
-                'login' => true,
+                'login'       => true,
+                'permissions' => \Ijdb\Entity\Author::REMOVE_CATEGORIES,
             ],
         ];
 
@@ -140,5 +161,16 @@ class IjdbRoutes implements \Ninja\Routes
     public function getAuthentication(): \Ninja\Authentication
     {
         return $this->authentication;
+    }
+
+    public function checkPermission($permission): bool
+    {
+        $user = $this->authentication->getUser();
+
+        if ($user && $user->hasPermission($permission)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

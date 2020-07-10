@@ -79,4 +79,31 @@ class Register
                 ]];
         }
     }
+
+    function list() {
+        $authors = $this->authorsTable->findAll();
+
+        return [
+            'template'  => 'authorlist.html.php',
+            'title'     => 'Author list',
+            'variables' => [
+                'authors' => $authors,
+            ],
+        ];
+    }
+
+    public function permissions()
+    {
+        $author = $this->authorsTable->findById($_GET['id']);
+
+        $reflected = new \ReflectionClass('\Ijdb\Entity\Author');
+        $constants = $reflected->getConstants();
+
+        return ['template' => 'permissions.html.php',
+            'title'            => 'Edit Permissions',
+            'variables'        => [
+                'author'      => $author,
+                'permissions' => $constants,
+            ]];
+    }
 }
